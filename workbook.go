@@ -46,6 +46,10 @@ func (w *WorkBook) Parse(buf io.ReadSeeker) {
 	offset := 0
 	for {
 		if err := binary.Read(buf, binary.LittleEndian, b); err == nil {
+			// stop parsing if this file is encrypted
+			if b.Id == 0x2f {
+				break
+			}
 			bof_pre, b, offset = w.parseBof(buf, b, bof_pre, offset)
 		} else {
 			break
